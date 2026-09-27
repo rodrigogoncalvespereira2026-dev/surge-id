@@ -41,3 +41,13 @@ jobs:
           python-version: "3.11"
       - run: pip install -r requirements.txt -r requirements-dev.txt
       - run: python -m pytest -q
+
+  sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node --check sdk/surge-id.js
+      - run: node --test sdk/surge-id.test.js

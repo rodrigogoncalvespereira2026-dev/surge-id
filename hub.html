@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surge ID</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --panel: #131a2b;
+    --panel-2: #1b2340;
+    --line: #2a3352;
+    --text: #e8ecf7;
+    --muted: #93a0c0;
+    --accent: #7c5cff;
+    --accent-2: #27d3c2;
+    --danger: #ff5d73;
+    --ok: #3ddc97;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(1200px 600px at 50% -10%, #1d2447 0%, var(--bg) 60%);
+    color: var(--text);
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 48px;
+  }
+  header { text-align: center; margin-bottom: 24px; }
+  .brand {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .tag { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .card {
+    width: 100%;
+    max-width: 520px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  }
+  .card h2 { margin: 0 0 4px; font-size: 17px; letter-spacing: 1px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tab {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--muted);
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .tab.active { color: var(--text); border-color: var(--accent); background: #232a4d; }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 12px 0 6px; letter-spacing: .5px; }
+  input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #0d1220;
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+  }
+  input:focus { border-color: var(--accent); }
+  .btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 13px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent), #5b8cff);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+  .btn.secondary { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+  .btn:disabled { opacity: .6; cursor: default; }
+  .error { color: var(--danger); font-size: 13px; min-height: 18px; margin-top: 10px; }
+  .ok-msg { color: var(--ok); font-size: 13px; min-height: 18px; margin-top: 10px; }
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    color: var(--muted);
+  }
+  .badge.on { color: var(--ok); border-color: rgba(61, 220, 151, .5); }
+  .badge.off { color: var(--danger); border-color: rgba(255, 93, 115, .5); }
+  .surge-id {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--accent-2);
+    margin: 10px 0 2px;
+  }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .row .btn { width: auto; flex: 1; min-width: 150px; margin-top: 0; font-size: 13px; letter-spacing: .5px; }
+  .games { list-style: none; padding: 0; margin: 12px 0 0; }
+  .games li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel-2);
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .stats { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .stat {
+    flex: 1;
+    min-width: 100px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .stat b { display: block; font-size: 20px; }
+  .stat span { font-size: 11px; color: var(--muted); letter-spacing: .5px; }
+  footer { margin-top: 8px; font-size: 12px; color: var(--muted); text-align: center; }
+  footer a { color: var(--accent-2); }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">SURGE ID</div>
+    <div class="tag">Uma conta para todos os jogos Surge Games</div>
+  </header>
+
+  <section class="card" id="auth-card">
+    <div class="tabs">
+      <button class="tab active" id="tab-login" type="button">Entrar</button>
+      <button class="tab" id="tab-register" type="button">Criar conta</button>
+    </div>
+    <form id="auth-form" autocomplete="on">
+      <label for="auth-email">Email</label>
+      <input type="email" id="auth-email" placeholder="oteu@email.com" required autocomplete="email">
+      <label for="auth-password">Palavra-passe</label>
+      <input type="password" id="auth-password" placeholder="mínimo 8 caracteres" required autocomplete="current-password" minlength="8">
+      <div id="auth-extra" class="hidden">
+        <label for="auth-name">Nome (opcional)</label>
+        <input type="text" id="auth-name" placeholder="Ranger" maxlength="40">
+      </div>
+      <div class="error" id="auth-error"></div>
+      <button class="btn" type="submit" id="auth-submit">ENTRAR</button>
+    </form>
+  </section>
+
+  <section class="card hidden" id="session-card">
+    <h2>A TUA CONTA</h2>
+    <div class="muted" id="session-email"></div>
+    <div class="surge-id" id="session-surge">SG-??????</div>
+    <div class="muted" id="session-state"></div>
+    <div class="row">
+      <span class="badge" id="api-badge">API</span>
+      <span class="badge" id="sync-badge">sem sincronizar</span>
+    </div>
+
+    <div class="stats" id="local-stats">
+      <div class="stat"><b id="st-trophies">0</b><span>TROFÉUS</span></div>
+      <div class="stat"><b id="st-coins">0</b><span>MOEDAS</span></div>
+      <div class="stat"><b id="st-gems">0</b><span>JOIAS</span></div>
+      <div class="stat"><b id="st-bp">0</b><span>PASSE</span></div>
+    </div>
+
+    <div class="row">
+      <button class="btn" id="btn-push" type="button">ENVIAR PROGRESSO LOCAL</button>
+      <button class="btn secondary" id="btn-pull" type="button">DESCARREGAR DA NUVEM</button>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="btn-logout" type="button">SAIR DA CONTA</button>
+      <button class="btn ghost" id="btn-refresh" type="button">ATUALIZAR</button>
+    </div>
+    <div class="ok-msg" id="session-msg"></div>
+  </section>
+
+  <section class="card">
+    <h2>JOGOS</h2>
+    <div class="muted">Jogos registados no teu Surge ID</div>
+    <ul class="games" id="games-list"><li>A carregar…</li></ul>
+  </section>
+
+  <footer>
+    Serviço Surge ID · <a href="./">estado</a> ·
+    <a href="https://rodrigogoncalvespereira2026-dev.github.io/primal_force/">Power Rangers Primal Force</a>
+  </footer>
+
+  <script src="sdk/surge-id.js"></script>
+  <script>
+    (function () {
+      var mode = 'login';
+      var localKey = 'prf_progression';
+
+      function $(id) { return document.getElementById(id); }
+
+      function params() {
+        var out = {};
+        location.search.replace(/[?&]([^=&]+)=([^&]*)/g, function (_, k, v) {
+          out[k] = decodeURIComponent(v);
+        });
+        return out;
+      }
+
+      var query = params();
+      if (query.api) SurgeID.configure({ apiBase: query.api });
+      SurgeID.restore();
+
+      function readLocal() {
+        try {
+          var raw = localStorage.getItem(localKey);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function writeLocal(data) {
+        try {
+          localStorage.setItem(localKey, JSON.stringify(data));
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function renderStats() {
+        var data = readLocal() || {};
+        $('st-trophies').textContent = data.trophies || 0;
+        $('st-coins').textContent = data.coins || 0;
+        $('st-gems').textContent = data.gems || 0;
+        $('st-bp').textContent = data.battlePassTier || 0;
+      }
+
+      function renderStatus() {
+        var status = SurgeID.status();
+        $('auth-card').classList.toggle('hidden', status.signedIn);
+        $('session-card').classList.toggle('hidden', !status.signedIn);
+
+        var api = $('api-badge');
+        api.textContent = status.online ? 'API ligada' : 'API em baixo';
+        api.className = 'badge ' + (status.online ? 'on' : 'off');
+
+        var sync = $('sync-badge');
+        if (status.lastSyncAt) {
+          sync.textContent = 'sincronizado ' + new Date(status.lastSyncAt).toLocaleTimeString();
+          sync.className = 'badge on';
+        } else {
+          sync.textContent = 'por sincronizar';
+          sync.className = 'badge';
+        }
+
+        if (status.signedIn) {
+          $('session-email').textContent = status.user ? status.user.email : '';
+          $('session-surge').textContent = status.user ? status.user.surge_id : 'SG-??????';
+          $('session-state').textContent = status.online
+            ? 'Conta ligada — o progresso guarda-se na nuvem.'
+            : 'Sem ligação — o progresso fica guardado neste navegador.';
+          renderStats();
+        }
+      }
+
+      function setMode(next) {
+        mode = next;
+        $('tab-login').classList.toggle('active', mode === 'login');
+        $('tab-register').classList.toggle('active', mode === 'register');
+        $('auth-extra').classList.toggle('hidden', mode !== 'register');
+        $('auth-submit').textContent = mode === 'login' ? 'ENTRAR' : 'CRIAR CONTA';
+        $('auth-password').setAttribute('autocomplete', mode === 'login' ? 'current-password' : 'new-password');
+        $('auth-error').textContent = '';
+      }
+
+      $('tab-login').onclick = function () { setMode('login'); };
+      $('tab-register').onclick = function () { setMode('register'); };
+
+      $('auth-form').onsubmit = function (event) {
+        event.preventDefault();
+        var error = $('auth-error');
+        error.textContent = '';
+        var email = $('auth-email').value.trim();
+        var password = $('auth-password').value;
+        var submit = $('auth-submit');
+        submit.disabled = true;
+        submit.textContent = 'A PROCESSAR…';
+
+        var action = mode === 'login'
+          ? SurgeID.login({ email: email, password: password })
+          : SurgeID.register({ email: email, password: password, displayName: $('auth-name').value.trim() });
+
+        action.then(function (res) {
+          submit.disabled = false;
+          setMode(mode);
+          if (!res.ok) {
+            var messages = {
+              invalid_email: 'Email inválido.',
+              weak_password: 'A palavra-passe precisa de 8 caracteres ou mais.',
+              email_taken: 'Já existe uma conta com este email.',
+              invalid_credentials: 'Email ou palavra-passe errados.',
+              offline: 'Sem ligação ao servidor. Tenta daqui a uns segundos.',
+            };
+            error.textContent = messages[res.error] || 'Algo correu mal (' + (res.error || res.status) + ').';
+            return;
+          }
+          $('auth-form').reset();
+          renderStatus();
+          loadGames();
+        });
+      };
+
+      function resultMessage(res) {
+        if (res.ok) return 'Progresso sincronizado com a nuvem.';
+        if (res.offline) return 'Sem ligação — nada foi alterado na nuvem.';
+        if (res.reason === 'signed_out') return 'Precisas de entrar na conta primeiro.';
+        return 'Erro: ' + (res.error || res.status || 'desconhecido');
+      }
+
+      $('btn-push').onclick = function () {
+        var msg = $('session-msg');
+        msg.textContent = 'A enviar…';
+        SurgeID.sync(readLocal() || {}).then(function (res) {
+          msg.textContent = resultMessage(res);
+          renderStatus();
+        });
+      };
+
+      $('btn-pull').onclick = function () {
+        var msg = $('session-msg');
+        msg.textContent = 'A descarregar…';
+        SurgeID.loadProgress().then(function (res) {
+          if (!res.ok) {
+            msg.textContent = resultMessage(res);
+            renderStatus();
+            return;
+          }
+          var merged = SurgeID.mergeProgress(readLocal() || {}, res.data.progress || {});
+          writeLocal(merged);
+          renderStats();
+          msg.textContent = 'Progresso da nuvem aplicado neste navegador.';
+          renderStatus();
+        });
+      };
+
+      $('btn-logout').onclick = function () {
+        SurgeID.logout();
+        $('session-msg').textContent = '';
+        renderStatus();
+      };
+
+      $('btn-refresh').onclick = function () {
+        $('session-msg').textContent = '';
+        SurgeID.me().then(function () { renderStatus(); });
+        loadGames();
+      };
+
+      function loadGames() {
+        var list = $('games-list');
+        SurgeID.games().then(function (res) {
+          if (!res.ok) {
+            list.innerHTML = '<li>Sem ligação à API</li>';
+            return;
+          }
+          var games = (res.data && res.data.games) || [];
+          if (!games.length) {
+            list.innerHTML = '<li>Sem jogos registados</li>';
+            return;
+          }
+          list.innerHTML = games.map(function (game) {
+            return '<li><span>' + game.name + '</span><span class="muted">' + game.slug + '</span></li>';
+          }).join('');
+        });
+      }
+
+      SurgeID.on(renderStatus);
+      setMode('login');
+      renderStatus();
+      loadGames();
+    })();
+  </script>
+</body>
+</html>
